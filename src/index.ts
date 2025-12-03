@@ -1,12 +1,28 @@
+import { cors } from "@elysiajs/cors";
 import staticPlugin from "@elysiajs/static";
 import { Elysia } from "elysia";
 import { env } from "./config/env";
 import router from "./route";
-
-const app = new Elysia().use(
+const app = new Elysia();
+app.use(
   staticPlugin({
     assets: "public", // folder public
     prefix: "/", // akses langsung
+  })
+);
+app.use(
+  cors({
+    origin: (req) => {
+      const origin = req.headers.get("origin");
+      if (!origin) return false;
+
+      if (/.*\.amiminn\.com$/.test(origin)) return true;
+      if (origin.startsWith("http://localhost")) return true;
+      if (origin.startsWith("http://127.0.0.1")) return true;
+
+      return false;
+    },
+    credentials: true,
   })
 );
 
