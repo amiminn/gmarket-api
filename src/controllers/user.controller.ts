@@ -4,12 +4,9 @@ import { STATUS } from "@/generated/prisma/enums";
 
 export const UserController = {
   index: async ({ store }: any) => {
-    console.log(store.user);
-    const data = await db.user.findMany({
-      where: {
-        status: STATUS.ACTIVE,
-      },
-    });
+    const data =
+      await db.$queryRaw`SELECT u.*, CAST(COUNT(o.id) AS INT) AS total_order FROM users u LEFT JOIN "order" o ON o."userId" = u.id WHERE u.status = ${STATUS.ACTIVE} GROUP BY u.id;`;
+
     return {
       message: "list data user",
       data,
