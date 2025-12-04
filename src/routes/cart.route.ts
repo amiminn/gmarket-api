@@ -10,6 +10,7 @@ export const cartRoute = new Elysia({ prefix: "/cart" })
     beforeHandle: [authMiddleware],
     body: t.Object({
       productId: t.Number(),
+      ukuran: t.String(),
     }),
   })
   .post("/updateqty", CartController.updateQtyCart, {

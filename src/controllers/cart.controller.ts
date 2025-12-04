@@ -10,7 +10,7 @@ export const CartController = {
     return { message: "data cart", data };
   },
   addCart: async ({ store, body, set }: any) => {
-    const { productId } = body;
+    const { productId, ukuran } = body;
     const findProduct = await db.product.findFirst({
       where: {
         id: productId as number,
@@ -46,6 +46,7 @@ export const CartController = {
       data: {
         userId: store.user.id,
         productId: findProduct.id as number,
+        ukuran,
         qty: 1,
       },
     });
