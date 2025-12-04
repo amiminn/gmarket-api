@@ -3,7 +3,11 @@ import { random, randomnum } from "@/config/string";
 import { ORDERSTATUS } from "@/generated/prisma/enums";
 
 export const OrderController = {
-  index: async () => {},
+  index: async () => {
+    const data =
+      await db.$queryRaw`SELECT o.*, u.username FROM "order" o JOIN "users" u ON o."userId" = u.id`;
+    return { message: "data order", data };
+  },
   listOrder: async ({ store }: any) => {
     const data = await db.order.findMany({
       where: {
