@@ -67,6 +67,7 @@ model OrderItem {
   id           Int        @id @default(autoincrement())
   orderId      Int
   productId    Int
+  ukuran       String?
   qty          Int
   harga        Int
 
@@ -115,6 +116,7 @@ model CartItem {
   id        Int     @id @default(autoincrement())
   userId    Int
   productId Int
+  ukuran    String?
   qty       Int
 
   @@map("cart_item")

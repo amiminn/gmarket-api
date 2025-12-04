@@ -4,6 +4,7 @@ import { Elysia } from "elysia";
 import { env } from "./config/env";
 import { authRoute } from "./routes/auth.route";
 import { cartRoute } from "./routes/cart.route";
+import { customerRoute } from "./routes/customer.route";
 import { favoriteRoute } from "./routes/favorite.route";
 import { kategoriRoute } from "./routes/kategori.route";
 import { orderRoute } from "./routes/order.route";
@@ -31,5 +32,6 @@ router.use(orderRoute);
 router.use(cartRoute);
 router.use(kategoriRoute);
 router.use(userRoute);
+router.use(customerRoute);
 
 export default router;
