@@ -80,6 +80,7 @@ export const AuthController = {
         username: true,
         email: true,
         alamat: true,
+        role: true,
       },
     });
     return {
