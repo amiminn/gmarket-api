@@ -70,7 +70,27 @@ export const AuthController = {
     }
   },
 
-  profile: async ({ user }: any) => {
-    return { user };
+  profile: async ({ store }: any) => {
+    const data = await db.user.findFirst({
+      where: {
+        id: store.user.id,
+      },
+    });
+    return {
+      message: "Data user login",
+      data,
+    };
+  },
+  updateprodfile: async ({ store, body }: any) => {
+    const { email } = body;
+    const data = await db.user.update({
+      where: {
+        id: store.user.id,
+      },
+      data: {
+        email: email,
+      },
+    });
+    return { message: "data user berhasil diupdate.", data };
   },
 };

@@ -17,12 +17,10 @@ export const authRoute = new Elysia({ prefix: "/auth" })
       email: t.String(),
     }),
   })
-  .get(
-    "/profile",
-    ({ store }: any) => {
-      return {
-        msg: "hello " + store.user.username,
-      };
-    },
-    { beforeHandle: authMiddleware }
-  );
+  .get("/profile", AuthController.profile, { beforeHandle: authMiddleware })
+  .put("/profile", AuthController.updateprodfile, {
+    beforeHandle: authMiddleware,
+    body: t.Object({
+      email: t.String(),
+    }),
+  });
