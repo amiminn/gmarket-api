@@ -182,4 +182,22 @@ export const OrderController = {
       data: updatedOrder,
     };
   },
+  selforder: async ({ store }: any) => {
+    const data = await db.order.findMany({
+      where: {
+        userId: store.user.id,
+      },
+    });
+    return { message: "data order", data };
+  },
+  detailorder: async ({ store, params }: any) => {
+    const { invoice } = params;
+    const data = await db.order.findFirst({
+      where: {
+        invoice,
+        userId: store.user.id,
+      },
+    });
+    return { message: "data order", data };
+  },
 };

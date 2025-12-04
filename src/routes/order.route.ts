@@ -29,4 +29,13 @@ export const orderRoute = new Elysia({ prefix: "/order" })
       invoice: t.String(),
       token: t.String(),
     }),
+  })
+  .get("/self-order", OrderController.selforder, {
+    beforeHandle: authMiddleware,
+  })
+  .get("/detail-order/:invoice", OrderController.detailorder, {
+    beforeHandle: authMiddleware,
+    params: t.Object({
+      invoice: t.String(),
+    }),
   });
