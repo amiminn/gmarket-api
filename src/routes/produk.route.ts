@@ -32,8 +32,8 @@ export const produkRoute = new Elysia({ prefix: "/produk" })
       deskripsi: t.String(),
       kategoriId: t.Numeric(),
       isUpdateThumbnail: t.String(),
-      gambar: t
-        .Files({
+      gambar: t.Optional(
+        t.Files({
           error: () => ({
             message: "Harap sertakan gambar untuk detail produk.",
           }),
@@ -42,7 +42,7 @@ export const produkRoute = new Elysia({ prefix: "/produk" })
           maxSize: 5 * 1024 * 1024,
           pattern: "image/*",
         })
-        .opstional(),
+      ),
     }),
   })
   .get("/:id", ProdukController.show, {
