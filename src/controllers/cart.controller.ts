@@ -2,11 +2,15 @@ import { db } from "@/config/database";
 
 export const CartController = {
   index: async ({ store }: any) => {
-    const data = await db.cartItem.findMany({
-      where: {
-        userId: store.user.id,
-      },
-    });
+    const data =
+      await db.$queryRaw`SELECT ci.id,ci."productId",ci."userId",ci.qty,p.nama,p.stok,p.harga,
+  COALESCE(
+    jsonb_agg(
+      jsonb_build_object('url', pi.url)
+    ) FILTER (WHERE pi.url IS NOT NULL),
+    '[]'::jsonb
+  ) AS gambar FROM cart_item ci JOIN produk p ON p.id = ci."productId" LEFT JOIN produk_image pi ON pi."productId" = p.id WHERE ci."userId" = 1 GROUP BY  p.id, ci.id, ci."productId", ci."userId", ci.qty;`;
+
     return { message: "data cart", data };
   },
   addCart: async ({ store, body, set }: any) => {
