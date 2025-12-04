@@ -49,8 +49,8 @@ export const OrderController = {
       listOrder.map(async (item: any) => {
         await db.$queryRaw`
           DELETE FROM cart_item 
-          WHERE userId = ${store.user.id} 
-          AND productId = ${item.productId}
+          WHERE "userId" = ${store.user.id} 
+          AND "productId" = ${item.productId}
         `;
 
         await db.product.update({
