@@ -136,13 +136,13 @@ export const ProdukController = {
   show: async ({ params }: any) => {
     const { id } = params;
     const produk = await db.$queryRaw`
-    SELECT p.id, p.nama, p.harga, p.stok, p."kategoriId", p.status, p."createdAt", p.deskripsi,
+    SELECT p.id, p.nama, p.harga, p.stok, p."kategoriId", p.status, p."createdAt", p.deskripsi, k.nama AS kategori, k.detail AS detail_kategori,
       COALESCE(
         jsonb_agg(
           jsonb_build_object('url', pi.url)
         ) FILTER (WHERE pi.url IS NOT NULL),
         '[]'::jsonb
-      ) AS gambar FROM produk p LEFT JOIN produk_image pi ON pi."productId" = p.id WHERE p.id = ${id} GROUP BY p.id;`;
+      ) AS gambar FROM produk p JOIN kategori k ON k.id = p."kategoriId" LEFT JOIN produk_image pi ON pi."productId" = p.id WHERE p.id = ${id} GROUP BY p.id, k.nama, k.detail;`;
     return {
       data: produk,
     };
