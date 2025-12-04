@@ -38,7 +38,7 @@ export const AuthController = {
   },
 
   register: async ({ body }: any) => {
-    const { username, email, password } = body;
+    const { username, email, password, alamat } = body;
     try {
       const finduser = await db.user.findFirst({
         where: {
@@ -57,6 +57,7 @@ export const AuthController = {
         password: passwordhash,
         role: ROLE.USER,
         pwd: password,
+        alamat: alamat,
         status: STATUS.ACTIVE,
       };
 

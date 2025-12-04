@@ -15,6 +15,7 @@ export const authRoute = new Elysia({ prefix: "/auth" })
       username: t.String(),
       password: t.String(),
       email: t.String(),
+      alamat: t.Optional(t.String()),
     }),
   })
   .get("/profile", AuthController.profile, { beforeHandle: authMiddleware })
