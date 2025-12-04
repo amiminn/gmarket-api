@@ -10,15 +10,17 @@ export const produkRoute = new Elysia({ prefix: "/produk" })
       stok: t.Numeric(),
       deskripsi: t.String(),
       kategoriId: t.Numeric(),
-      gambar: t.Files({
-        error: () => ({
-          message: "Harap sertakan gambar untuk detail produk.",
-        }),
-        minItems: 1,
-        maxItems: 5,
-        maxSize: 5 * 1024 * 1024,
-        pattern: "image/*",
-      }),
+      gambar: t
+        .Files({
+          error: () => ({
+            message: "Harap sertakan gambar untuk detail produk.",
+          }),
+          minItems: 1,
+          maxItems: 5,
+          maxSize: 5 * 1024 * 1024,
+          pattern: "image/*",
+        })
+        .opstional(),
     }),
   })
   .put("/:id", ProdukController.update, {
@@ -31,6 +33,18 @@ export const produkRoute = new Elysia({ prefix: "/produk" })
       stok: t.Numeric(),
       deskripsi: t.String(),
       kategoriId: t.Numeric(),
+      isUpdateThumbnail: t.String(),
+      gambar: t
+        .Files({
+          error: () => ({
+            message: "Harap sertakan gambar untuk detail produk.",
+          }),
+          minItems: 1,
+          maxItems: 5,
+          maxSize: 5 * 1024 * 1024,
+          pattern: "image/*",
+        })
+        .opstional(),
     }),
   })
   .get("/:id", ProdukController.show, {

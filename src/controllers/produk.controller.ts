@@ -66,7 +66,8 @@ export const ProdukController = {
     }
   },
   update: async ({ body, set, params }: any) => {
-    const { nama, harga, stok, deskripsi, kategoriId } = body;
+    const { nama, harga, isUpdateThumbnail, stok, deskripsi, kategoriId } =
+      body;
     const id = params.id;
 
     const data = {
@@ -78,7 +79,41 @@ export const ProdukController = {
       status: STATUS.ACTIVE,
     };
 
+    const gambar = [];
     try {
+      const isUpdateThumbnailBoolean =
+        typeof isUpdateThumbnail === "string"
+          ? isUpdateThumbnail === "true"
+          : Boolean(isUpdateThumbnail);
+
+      if (isUpdateThumbnailBoolean) {
+        for (const file of body.gambar) {
+          const buffer = Buffer.from(await file.arrayBuffer());
+          const ext = file.name.split(".").pop();
+          const filename = `${randomUUID()}.${ext}`;
+          const path = `./public/uploads/${filename}`;
+
+          gambar.push(`${env.APP_URL}/uploads/${filename}`);
+          await writeFile(path, buffer);
+        }
+
+        const deleteimagelama = await db.productImage.deleteMany({
+          where: {
+            productId: id,
+          },
+        });
+
+        if (deleteimagelama) {
+          await db.productImage.createMany({
+            data: gambar.map((item) => {
+              return {
+                url: item,
+                productId: id,
+              };
+            }),
+          });
+        }
+      }
       await db.product.update({
         data,
         where: {
