@@ -75,6 +75,11 @@ export const AuthController = {
       where: {
         id: store.user.id,
       },
+      select: {
+        username: true,
+        email: true,
+        alamat: true,
+      },
     });
     return {
       message: "Data user login",
@@ -82,13 +87,14 @@ export const AuthController = {
     };
   },
   updateprodfile: async ({ store, body }: any) => {
-    const { email } = body;
+    const { email, alamat } = body;
     const data = await db.user.update({
       where: {
         id: store.user.id,
       },
       data: {
-        email: email,
+        email,
+        alamat,
       },
     });
     return { message: "data user berhasil diupdate.", data };

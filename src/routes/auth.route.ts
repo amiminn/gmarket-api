@@ -22,5 +22,6 @@ export const authRoute = new Elysia({ prefix: "/auth" })
     beforeHandle: authMiddleware,
     body: t.Object({
       email: t.String(),
+      alamat: t.Optional(t.String()),
     }),
   });
