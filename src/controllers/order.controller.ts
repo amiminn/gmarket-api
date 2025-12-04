@@ -46,7 +46,13 @@ export const OrderController = {
     });
 
     listOrder.map(async (item: any) => {
-      const res = await db.product.update({
+      db.cartItem.deleteMany({
+        where: {
+          userId: store.user.id,
+          productId: item.productId,
+        },
+      });
+      await db.product.update({
         where: {
           id: item.productId,
         },
