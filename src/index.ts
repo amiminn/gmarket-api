@@ -31,6 +31,7 @@ app.use(
 
 // handle OPTIONS
 app.options("/*", () => new Response(null, { status: 200 }));
+``;
 
 app.get("/", () => {
   return {
@@ -49,7 +50,7 @@ app.all("*", () => {
   });
 });
 
-app.listen(env.PORT);
+app.listen({ port: env.PORT, hostname: "0.0.0.0" });
 
 console.log(
   `🦊 Elysia is running at http://${app.server?.hostname}:${app.server?.port}`
