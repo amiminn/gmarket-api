@@ -45,24 +45,26 @@ export const OrderController = {
       data: dataorder,
     });
 
-    listOrder.map(async (item: any) => {
-      await db.$queryRaw`
-        DELETE FROM cart_item 
-        WHERE userId = ${store.user.id} 
-        AND productId = ${item.productId}
-      `;
+    await Promise.all(
+      listOrder.map(async (item: any) => {
+        await db.$queryRaw`
+          DELETE FROM cart_item 
+          WHERE userId = ${store.user.id} 
+          AND productId = ${item.productId}
+        `;
 
-      await db.product.update({
-        where: {
-          id: item.productId,
-        },
-        data: {
-          stok: {
-            decrement: item.qty,
+        await db.product.update({
+          where: {
+            id: item.productId,
           },
-        },
-      });
-    });
+          data: {
+            stok: {
+              decrement: item.qty,
+            },
+          },
+        });
+      })
+    );
 
     if (createdataorder) {
       const dataorderitem = await Promise.all(
