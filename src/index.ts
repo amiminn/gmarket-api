@@ -14,8 +14,8 @@ app.use(
   cors({
     origin: (req) => {
       const origin = req.headers.get("origin");
-      if (!origin) return false;
 
+      if (!origin) return true;
       if (/.*\.amiminn\.com$/.test(origin)) return true;
       if (origin.startsWith("http://localhost")) return true;
       if (origin.startsWith("http://127.0.0.1")) return true;
@@ -23,8 +23,14 @@ app.use(
       return false;
     },
     credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+    preflight: true,
   })
 );
+
+// handle OPTIONS
+app.options("/*", () => new Response(null, { status: 200 }));
 
 app.get("/", () => {
   return {
