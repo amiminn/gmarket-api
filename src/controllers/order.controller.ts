@@ -85,7 +85,7 @@ export const OrderController = {
       });
     }
 
-    return { message: "order berhasil dibuat." };
+    return { message: "order berhasil dibuat.", data: createdataorder };
   },
   proccessPayment: async ({ query }: any) => {
     const { invoice, token } = query;
@@ -168,7 +168,6 @@ export const OrderController = {
       })
     );
 
-    // 4. Update status order
     const updatedOrder = await db.order.update({
       where: {
         id: order.id,
