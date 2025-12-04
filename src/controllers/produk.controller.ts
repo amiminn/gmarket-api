@@ -7,7 +7,7 @@ import { writeFile } from "node:fs/promises";
 export const ProdukController = {
   index: async () => {
     const produk = await db.$queryRaw`
-      SELECT  p.id, p.nama, p.harga, p.stok, p."kategoriId", p.status, p."createdAt", COALESCE(
+      SELECT  p.id, p.nama, p.harga, p.stok, p.deskripsi, p."kategoriId", p.status, p."createdAt", COALESCE(
           jsonb_agg(
             jsonb_build_object('url', pi.url)
           ) FILTER (WHERE pi.url IS NOT NULL),
@@ -136,7 +136,7 @@ export const ProdukController = {
   show: async ({ params }: any) => {
     const { id } = params;
     const produk = await db.$queryRaw`
-    SELECT p.id, p.nama, p.harga, p.stok, p."kategoriId", p.status, p."createdAt",
+    SELECT p.id, p.nama, p.harga, p.stok, p."kategoriId", p.status, p."createdAt", p.deskripsi,
       COALESCE(
         jsonb_agg(
           jsonb_build_object('url', pi.url)
