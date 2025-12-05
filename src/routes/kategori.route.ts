@@ -5,8 +5,8 @@ export const kategoriRoute = new Elysia({ prefix: "/kategori" })
   .get("/", KategoriController.index)
   .post("/", KategoriController.create, {
     body: t.Object({
-      nama: t.String(),
-      detail: t.String(),
+      nama: t.String({ minLength: 1 }),
+      detail: t.String({ minLength: 1 }),
     }),
   })
   .put("/:id", KategoriController.update, {
@@ -14,8 +14,8 @@ export const kategoriRoute = new Elysia({ prefix: "/kategori" })
       id: t.String(),
     }),
     body: t.Object({
-      nama: t.String(),
-      detail: t.String(),
+      nama: t.String({ minLength: 1 }),
+      detail: t.String({ minLength: 1 }),
     }),
   })
   .get("/:id", KategoriController.show, {

@@ -5,11 +5,11 @@ export const produkRoute = new Elysia({ prefix: "/produk" })
   .get("/", ProdukController.index)
   .post("/", ProdukController.create, {
     body: t.Object({
-      nama: t.String(),
-      harga: t.Numeric(),
-      stok: t.Numeric(),
-      deskripsi: t.String(),
-      kategoriId: t.Numeric(),
+      nama: t.String({ minLength: 1 }),
+      harga: t.Numeric({ minLength: 1 }),
+      stok: t.Numeric({ minLength: 1 }),
+      deskripsi: t.String({ minLength: 1 }),
+      kategoriId: t.Numeric({ minLength: 1 }),
       gambar: t.Files({
         error: () => ({
           message: "Harap sertakan gambar untuk detail produk.",
@@ -26,10 +26,10 @@ export const produkRoute = new Elysia({ prefix: "/produk" })
       id: t.Numeric(),
     }),
     body: t.Object({
-      nama: t.String(),
-      harga: t.Numeric(),
-      stok: t.Numeric(),
-      deskripsi: t.String(),
+      nama: t.String({ minLength: 1 }),
+      harga: t.Numeric({ minLength: 1 }),
+      stok: t.Numeric({ minLength: 1 }),
+      deskripsi: t.String({ minLength: 1 }),
       kategoriId: t.Numeric(),
       isUpdateThumbnail: t.String(),
       gambar: t.Optional(t.Files()),
