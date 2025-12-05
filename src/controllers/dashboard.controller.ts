@@ -43,9 +43,19 @@ export const DashboardController = {
       db.order.count(),
     ]);
 
-    const [total_pendapatan] = await Promise.all([
-      db.$queryRaw`SELECT SUM(total) AS total FROM "order" WHERE status = ${ORDERSTATUS.PAID}`,
+    const [total_pendapatan]: any = await Promise.all([
+      db.$queryRaw`
+    SELECT total
+    FROM "order"
+    WHERE status = ${ORDERSTATUS.PAID}
+  `,
     ]);
+
+    // const pendapatan = Number(total_pendapatan.total ?? 0);
+    const pendapatan = total_pendapatan.reduce(
+      (acc: any, item: { total: number }) => acc + item.total,
+      0
+    );
 
     return {
       message: "data dashboard",
@@ -56,7 +66,7 @@ export const DashboardController = {
         order_paid: orderpaid,
         order_pending: orderpending,
         order_all: allorder,
-        total_pendapatan,
+        total_pendapatan: pendapatan,
       },
     };
   },
