@@ -9,7 +9,7 @@ export const CartController = {
       jsonb_build_object('url', pi.url)
     ) FILTER (WHERE pi.url IS NOT NULL),
     '[]'::jsonb
-  ) AS gambar FROM cart_item ci JOIN produk p ON p.id = ci."productId" LEFT JOIN produk_image pi ON pi."productId" = p.id WHERE ci."userId" = 1 GROUP BY  p.id, ci.id, ci."productId", ci."userId", ci.qty;`;
+  ) AS gambar FROM cart_item ci JOIN produk p ON p.id = ci."productId" LEFT JOIN produk_image pi ON pi."productId" = p.id WHERE ci."userId" = ${store.user.id} GROUP BY  p.id, ci.id, ci."productId", ci."userId", ci.qty;`;
 
     return { message: "data cart", data };
   },
