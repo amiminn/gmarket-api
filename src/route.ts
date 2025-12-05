@@ -5,6 +5,7 @@ import { env } from "./config/env";
 import { authRoute } from "./routes/auth.route";
 import { cartRoute } from "./routes/cart.route";
 import { customerRoute } from "./routes/customer.route";
+import { dashboardRoute } from "./routes/dashboard.route";
 import { favoriteRoute } from "./routes/favorite.route";
 import { kategoriRoute } from "./routes/kategori.route";
 import { orderRoute } from "./routes/order.route";
@@ -33,5 +34,6 @@ router.use(cartRoute);
 router.use(kategoriRoute);
 router.use(userRoute);
 router.use(customerRoute);
+router.use(dashboardRoute);
 
 export default router;
