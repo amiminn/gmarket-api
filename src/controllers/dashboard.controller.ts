@@ -3,28 +3,21 @@ import { ORDERSTATUS, ROLE, STATUS } from "@/generated/prisma/enums";
 
 export const DashboardController = {
   index: async () => {
-    const [customerAktif, customerInaktif, customerAllStatus] =
-      await Promise.all([
-        db.user.count({
-          where: {
-            role: ROLE.USER,
-            status: STATUS.ACTIVE,
-          },
-        }),
+    const [customerAktif, customerInaktif] = await Promise.all([
+      db.user.count({
+        where: {
+          role: ROLE.USER,
+          status: STATUS.ACTIVE,
+        },
+      }),
 
-        db.user.count({
-          where: {
-            role: ROLE.USER,
-            status: STATUS.INACTIVE,
-          },
-        }),
-
-        db.user.count({
-          where: {
-            role: ROLE.USER,
-          },
-        }),
-      ]);
+      db.user.count({
+        where: {
+          role: ROLE.USER,
+          status: STATUS.INACTIVE,
+        },
+      }),
+    ]);
 
     const [product] = await Promise.all([
       db.product.count({
@@ -50,16 +43,20 @@ export const DashboardController = {
       db.order.count(),
     ]);
 
+    const [total_pendapatan] = await Promise.all([
+      db.$queryRaw`SELECT SUM(total) AS total FROM "order" WHERE status = ${ORDERSTATUS.PAID}`,
+    ]);
+
     return {
       message: "data dashboard",
       data: {
         customer_active: customerAktif,
         customer_inactive: customerInaktif,
-        customer_all: customerAllStatus,
         product,
         order_paid: orderpaid,
         order_pending: orderpending,
         order_all: allorder,
+        total_pendapatan,
       },
     };
   },
