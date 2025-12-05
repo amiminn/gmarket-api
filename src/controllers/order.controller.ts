@@ -49,6 +49,32 @@ export const OrderController = {
       data: dataorder,
     });
 
+    if (createdataorder) {
+      const dataorderitem = await Promise.all(
+        listOrder.map(async (item: any) => {
+          const cartItem = await db.cartItem.findFirst({
+            where: { userId: store.user.id, productId: item.productId },
+          });
+
+          const product = await db.product.findFirst({
+            where: { id: cartItem?.productId },
+          });
+
+          return {
+            orderId: createdataorder.id,
+            productId: item.productId,
+            qty: item.qty,
+            harga: (product?.harga ?? 0) * item.qty,
+            ukuran: cartItem?.ukuran,
+          };
+        })
+      );
+
+      await db.orderItem.createMany({
+        data: dataorderitem,
+      });
+    }
+
     await Promise.all(
       listOrder.map(async (item: any) => {
         await db.$queryRaw`
@@ -69,27 +95,6 @@ export const OrderController = {
         });
       })
     );
-
-    if (createdataorder) {
-      const dataorderitem = await Promise.all(
-        listOrder.map(async (item: any) => {
-          const product = await db.product.findFirst({
-            where: { id: item.productId },
-          });
-
-          return {
-            orderId: createdataorder.id,
-            productId: item.productId,
-            qty: item.qty,
-            harga: (product?.harga ?? 0) * item.qty,
-          };
-        })
-      );
-
-      await db.orderItem.createMany({
-        data: dataorderitem,
-      });
-    }
 
     return { message: "order berhasil dibuat.", data: createdataorder };
   },
@@ -196,14 +201,17 @@ export const OrderController = {
     });
     return { message: "data order", data };
   },
-  detailorder: async ({ store, params }: any) => {
+  detailorder: async ({ params }: any) => {
     const { invoice } = params;
-    const data = await db.order.findFirst({
-      where: {
-        invoice,
-        userId: store.user.id,
-      },
-    });
-    return { message: "data order", data };
+    const data = (await db.$queryRaw`SELECT o.*, jsonb_agg(
+          jsonb_build_object( 'qty', oi.qty, 'nama', p.nama, 'harga', p.harga,
+              'image', (
+                  SELECT jsonb_agg(jsonb_build_object('url', pi.url))
+                  FROM produk_image pi
+                  WHERE pi."productId" = p.id
+              )
+          )
+      ) AS listproduk FROM "order" o JOIN order_item oi ON oi."orderId" = o.id JOIN produk p ON p.id = oi."productId" WHERE o.invoice = ${invoice} GROUP BY o.id;`) as any[];
+    return { message: "data order", data: data[0] };
   },
 };
